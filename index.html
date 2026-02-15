@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบทำข้อสอบออนไลน์ - เลือก Section</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+}
+
+.quiz-container {
+  background: white;
+  width: 100%;
+  max-width: 700px;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.header p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Section Selection Screen */
+.section-selection {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.section-card {
+  background: linear-gradient(135deg, #f8f9fa, #ffffff);
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 15px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-card:hover {
+  transform: translateY(-5px);
+  border-color: #667eea;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+}
+
+.section-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.section-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.section-info {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.section-meta {
+  display: flex;
+  gap: 15px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 13px;
+  color: #666;
+}
+
+.section-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.all-sections-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+}
+
+.all-sections-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.all-sections-card::before {
+  display: none;
+}
+
+.all-sections-card .section-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.all-sections-card .section-title,
+.all-sections-card .section-subtitle,
+.all-sections-card .section-meta {
+  color: white;
+}
+
+.all-sections-card .section-meta {
+  border-top-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Stats Bar */
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-icon {
+  font-size: 18px;
+}
+
+.stat-label {
+  color: #666;
+  font-weight: 300;
+}
+
+.stat-value {
+  color: #333;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.current-section-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.back-button {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.back-button:hover {
+  background: #667eea;
+  color: white;
+}
+
+.progress {
+  height: 10px;
+  background: #eee;
+  border-radius: 20px;
+  margin-bottom: 25px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  transition: width 0.4s ease;
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+}
+
+.question-box {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border-left: 4px solid #667eea;
+}
+
+.question-number {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+  line-height: 1.6;
+}
+
+#choices {
+  margin-bottom: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Prompt', sans-serif;
+  text-align: left;
+  position: relative;
+  background: white;
+}
+
+.choice-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.choice-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #666;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.choice-text {
+  flex: 1;
+}
+
+.choice-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #667eea;
+  transform: translateX(5px);
+}
+
+.choice-btn:hover:not(:disabled) .choice-letter {
+  background: #667eea;
+  color: white;
+}
+
+.choice-btn:disabled {
+  cursor: not-allowed;
+}
+
+.correct {
+  background: #d4edda !important;
+  border-color: #4CAF50 !important;
+  animation: correctPulse 0.5s ease;
+}
+
+.correct .choice-letter {
+  background: #4CAF50 !important;
+  color: white !important;
+}
+
+.wrong {
+  background: #f8d7da !important;
+  border-color: #E74C3C !important;
+  animation: shake 0.5s ease;
+}
+
+.wrong .choice-letter {
+  background: #E74C3C !important;
+  color: white !important;
+}
+
+#nextBtn, #restartBtn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  margin-top: 10px;
+  border: none;
+  font-weight: 600;
+  text-align: center;
+  padding: 16px;
+  font-size: 16px;
+}
+
+#nextBtn:hover, #restartBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.result-box {
+  text-align: center;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  animation: slideIn 0.3s ease;
+}
+
+.result-box.correct-result {
+  background: #d4edda;
+  color: #155724;
+}
+
+.result-box.wrong-result {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.final-score {
+  text-align: center;
+  padding: 30px;
+  animation: scaleIn 0.5s ease;
+}
+
+.score-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.score-number {
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.score-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+.score-message {
+  font-size: 20px;
+  margin: 20px 0;
+  color: #333;
+}
+
+.score-percentage {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes correctPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.explanation-box {
+  background: #fff9e6;
+  border-left: 4px solid #ffc107;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  animation: slideIn 0.3s ease;
+}
+
+.explanation-title {
+  font-weight: 600;
+  color: #856404;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.explanation-text {
+  color: #856404;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Input Mode Styles */
+.input-answer-box {
+  margin: 20px 0;
+}
+
+.answer-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  flex: 1;
+  min-width: 120px;
+}
+
+.input-label {
+  display: block;
+  font-size: 13px;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Prompt', sans-serif;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.answer-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.answer-input.correct-input {
+  border-color: #4CAF50;
+  background: #d4edda;
+}
+
+.answer-input.wrong-input {
+  border-color: #E74C3C;
+  background: #f8d7da;
+}
+
+.answer-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.submit-answer-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.submit-answer-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.submit-answer-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.correct-answers-box {
+  background: #d4edda;
+  border-left: 4px solid #4CAF50;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.correct-answers-title {
+  font-weight: 600;
+  color: #155724;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.correct-answers-list {
+  color: #155724;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.answer-comparison {
+  margin-top: 10px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 6px;
+}
+
+.comparison-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.comparison-item:last-child {
+  border-bottom: none;
+}
+
+.your-answer {
+  color: #E74C3C;
+  font-weight: 500;
+}
+
+.correct-answer {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .quiz-container {
+    padding: 25px 20px;
+  }
+
+  .stats-bar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .stat-item {
+    justify-content: space-between;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  button {
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+
+  .section-card {
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .section-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div class="header">
+    <h1>📚 ระบบทำข้อสอบออนไลน์</h1>
+    <p>เลือก Section ที่ต้องการทำข้อสอบ</p>
+  </div>
+
+  <!-- Section Selection Screen -->
+  <div id="sectionSelection" class="section-selection">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>กำลังโหลดข้อมูล...</p>
+    </div>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quizScreen" class="hidden">
+    <button class="back-button" id="backBtn">
+      ← กลับไปเลือก Section
+    </button>
+
+    <div class="current-section-badge" id="currentSectionBadge"></div>
+
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-item">
+        <span class="stat-icon">📊</span>
+        <div>
+          <div class="stat-label">ข้อที่</div>
+          <div class="stat-value"><span id="currentQ">0</span>/<span id="totalQ">0</span></div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">✅</span>
+        <div>
+          <div class="stat-label">ถูก</div>
+          <div class="stat-value" id="scoreDisplay">0</div>
+        </div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">❌</span>
+        <div>
+          <div class="stat-label">ผิด</div>
+          <div class="stat-value" id="wrongDisplay">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+      <span class="progress-text" id="progressText">0%</span>
+    </div>
+
+    <div id="quizContent"></div>
+    <div id="choices"></div>
+    <div id="resultContainer"></div>
+    <button id="nextBtn" class="hidden">ข้อถัดไป →</button>
+    <button id="restartBtn" class="hidden">🔄 ทำใหม่อีกครั้ง</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script>
+
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlx6-GD9Z466smdzgbMlME7ujtPMDoBAkPuyOugAS2B7mVThtRjuRZZvjAiPOBMgFXLWJCSuP5OoqW/pub?output=csv";
+
+let allQuestions = [];
+let sections = {};
+let currentSection = null;
+let questions = [];
+let currentIndex = 0;
+let score = 0;
+let wrongCount = 0;
+
+// คำอธิบาย section ภาษาไทย
+const sectionInfo = {
+  'section_form': {
+    name: 'Form (โครงสร้างประโยค)',
+    icon: '📝',
+    description: 'ทดสอบการใช้ preposition และโครงสร้างประโยคพื้นฐาน',
+    inputMode: false
+  },
+  'section_mean': {
+    name: 'Meaning (ความหมาย)',
+    icon: '💭',
+    description: 'ทดสอบความเข้าใจในการสนทนาและความหมาย',
+    inputMode: false
+  },
+  'section_form_mean': {
+    name: 'Form & Meaning (รวม)',
+    icon: '📖',
+    description: 'ทดสอบทั้งโครงสร้างและความหมายในบริบท - กรอกคำตอบ',
+    inputMode: true
+  }
+};
+
+// ฟังก์ชันสำหรับสลับอาร์เรย์
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+// โหลดข้อสอบและแบ่งตาม section
+fetch(SHEET_CSV_URL)
+  .then(res => res.text())
+  .then(csv => {
+    Papa.parse(csv, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        allQuestions = results.data.filter(row => row.question && row.question.trim() !== '');
+        
+        if (allQuestions.length === 0) {
+          document.getElementById('sectionSelection').innerHTML = 
+            '<div class="result-box wrong-result">❌ ไม่พบข้อสอบ กรุณาตรวจสอบลิงก์</div>';
+          return;
+        }
+
+        // แบ่งข้อสอบตาม section
+        allQuestions.forEach(row => {
+          const sectionName = row.section || 'other';
+          if (!sections[sectionName]) {
+            sections[sectionName] = [];
+          }
+          
+          // ตรวจสอบว่าเป็น input mode หรือไม่
+          const isInputMode = sectionInfo[sectionName]?.inputMode || false;
+          
+          let questionData = {
+            question: row.question,
+            explanation: row.explanation || ""
+          };
+          
+          if (isInputMode) {
+            // สำหรับ input mode ใช้ answer_word แยกด้วย comma
+            const answers = row.answer_word ? row.answer_word.split(',').map(a => a.trim()) : [];
+            questionData.answers = answers;
+            questionData.inputMode = true;
+          } else {
+            // สำหรับ choice mode
+            let answerIndex = parseInt(row.answer) - 1;
+            if (isNaN(answerIndex) && row.answer_word) {
+              const choices = [row.choice1, row.choice2, row.choice3, row.choice4];
+              answerIndex = choices.findIndex(c => c && c.trim() === row.answer_word.trim());
+            }
+            
+            questionData.choices = [row.choice1, row.choice2, row.choice3, row.choice4].filter(c => c && c.trim() !== '');
+            questionData.answer = answerIndex;
+            questionData.inputMode = false;
+          }
+          
+          sections[sectionName].push(questionData);
+        });
+
+        showSectionSelection();
+      },
+      error: function(error) {
+        document.getElementById('sectionSelection').innerHTML = 
+          '<div class="result-box wrong-result">❌ เกิดข้อผิดพลาดในการโหลดข้อสอบ</div>';
+      }
+    });
+  })
+  .catch(error => {
+    document.getElementById('sectionSelection').innerHTML = 
+      '<div class="result-box wrong-result">❌ ไม่สามารถเชื่อมต่อกับข้อสอบได้</div>';
+  });
+
+function showSectionSelection() {
+  const selectionDiv = document.getElementById('sectionSelection');
+  let html = '';
+
+  // แสดงปุ่ม "ทำทุก Section"
+  const totalQuestions = Object.values(sections).reduce((sum, sec) => sum + sec.length, 0);
+  html += `
+    <div class="section-card all-sections-card" onclick="startQuiz('all')">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div class="section-info">
+          <h3 class="section-title">ทำทุก Section</h3>
+          <p class="section-subtitle">ทำข้อสอบทั้งหมดแบบสุ่ม</p>
+        </div>
+      </div>
+      <div class="section-meta">
+        <div class="section-meta-item">
+          <span>📝</span>
+          <span>${totalQuestions} ข้อ</span>
+        </div>
+        <div class="section-meta-item">
+          <span>⏱️</span>
+          <span>ประมาณ ${Math.ceil(totalQuestions * 1.5)} นาที</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // แสดง Section แต่ละตัว
+  Object.keys(sections).sort().forEach(sectionKey => {
+    const info = sectionInfo[sectionKey] || {
+      name: sectionKey,
+      icon: '📄',
+      description: 'ข้อสอบ ' + sectionKey
+    };
+    
+    const questionCount = sections[sectionKey].length;
+    const estimatedTime = Math.ceil(questionCount * 1.5);
+
+    html += `
+      <div class="section-card" onclick="startQuiz('${sectionKey}')">
+        <div class="section-header">
+          <div class="section-icon">${info.icon}</div>
+          <div class="section-info">
+            <h3 class="section-title">${info.name}</h3>
+            <p class="section-subtitle">${info.description}</p>
+          </div>
+        </div>
+        <div class="section-meta">
+          <div class="section-meta-item">
+            <span>📝</span>
+            <span>${questionCount} ข้อ</span>
+          </div>
+          <div class="section-meta-item">
+            <span>⏱️</span>
+            <span>ประมาณ ${estimatedTime} นาที</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  selectionDiv.innerHTML = html;
+}
+
+function startQuiz(sectionKey) {
+  currentSection = sectionKey;
+  
+  if (sectionKey === 'all') {
+    // รวมทุก section
+    questions = [];
+    Object.values(sections).forEach(sec => {
+      questions = questions.concat(sec);
+    });
+    document.getElementById('currentSectionBadge').textContent = '🎯 ทุก Section';
+  } else {
+    questions = [...sections[sectionKey]];
+    const info = sectionInfo[sectionKey] || { name: sectionKey, icon: '📄' };
+    document.getElementById('currentSectionBadge').textContent = `${info.icon} ${info.name}`;
+  }
+
+  shuffleArray(questions);
+  currentIndex = 0;
+  score = 0;
+  wrongCount = 0;
+
+  document.getElementById('sectionSelection').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('totalQ').innerText = questions.length;
+  
+  showQuestion();
+}
+
+function showQuestion() {
+  if (currentIndex >= questions.length) {
+    showResult();
+    return;
+  }
+
+  const q = questions[currentIndex];
+  
+  document.getElementById('quizContent').innerHTML = `
+    <div class="question-box">
+      <div class="question-number">ข้อที่ ${currentIndex + 1} จาก ${questions.length}</div>
+      <h2>${q.question}</h2>
+    </div>
+  `;
+
+  document.getElementById('currentQ').innerText = currentIndex + 1;
+  document.getElementById('scoreDisplay').innerText = score;
+  document.getElementById('wrongDisplay').innerText = wrongCount;
+
+  const choicesDiv = document.getElementById("choices");
+  choicesDiv.innerHTML = "";
+  document.getElementById("resultContainer").innerHTML = "";
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  updateProgress();
+
+  // ตรวจสอบว่าเป็น input mode หรือ choice mode
+  if (q.inputMode) {
+    showInputQuestion(q, choicesDiv);
+  } else {
+    showChoiceQuestion(q, choicesDiv);
+  }
+}
+
+function showChoiceQuestion(q, choicesDiv) {
+  const letters = ['A', 'B', 'C', 'D'];
+  
+  // Create an array of choice objects with their original indices
+  const shuffledChoices = q.choices.map((choice, index) => ({
+    text: choice,
+    originalIndex: index
+  }));
+
+  // Shuffle the choices
+  shuffleArray(shuffledChoices);
+
+  shuffledChoices.forEach((choiceObj, i) => {
+    const btn = document.createElement("button");
+    btn.classList.add("choice-btn");
+    btn.innerHTML = `
+      <span class="choice-letter">${letters[i]}</span>
+      <span class="choice-text">${choiceObj.text}</span>
+    `;
+    // Pass the original index to checkAnswer
+    btn.onclick = () => checkAnswer(choiceObj.originalIndex, btn);
+    choicesDiv.appendChild(btn);
+  });
+}
+
+function showInputQuestion(q, choicesDiv) {
+  const numAnswers = q.answers.length;
+  
+  let inputsHTML = '<div class="input-answer-box"><div class="answer-inputs">';
+  
+  for (let i = 0; i < numAnswers; i++) {
+    inputsHTML += `
+      <div class="input-group">
+        <label class="input-label">(${i + 21})</label>
+        <input type="text" 
+               class="answer-input" 
+               id="input_${i}" 
+               placeholder="พิมพ์คำตอบ">
+      </div>
+    `;
+  }
+  
+  inputsHTML += '</div>';
+  inputsHTML += '<button class="submit-answer-btn" onclick="checkInputAnswers()">ตรวจคำตอบ</button>';
+  inputsHTML += '</div>';
+  
+  choicesDiv.innerHTML = inputsHTML;
+  
+  // Focus ช่องแรก
+  setTimeout(() => {
+    document.getElementById('input_0')?.focus();
+  }, 100);
+}
+
+function checkAnswer(selected, btnElement) {
+  const q = questions[currentIndex];
+  const buttons = document.querySelectorAll('.choice-btn');
+
+  buttons.forEach(b => b.disabled = true);
+
+  let resultHTML = '';
+  
+  if (selected === q.answer) {
+    btnElement.classList.add("correct");
+    score++;
+    resultHTML = `
+      <div class="result-box correct-result">
+        ✅ ถูกต้อง! เก่งมาก
+      </div>
+    `;
+  } else {
+    btnElement.classList.add("wrong");
+    buttons[q.answer].classList.add("correct");
+    wrongCount++;
+    resultHTML = `
+      <div class="result-box wrong-result">
+        ❌ ผิด! คำตอบที่ถูกคือข้อที่ถูกไฮไลต์
+      </div>
+    `;
+  }
+
+  if (q.explanation && q.explanation.trim() !== '') {
+    resultHTML += `
+      <div class="explanation-box">
+        <div class="explanation-title">💡 คำอธิบาย</div>
+        <div class="explanation-text">${q.explanation}</div>
+      </div>
+    `;
+  }
+
+  document.getElementById("resultContainer").innerHTML = resultHTML;
+  document.getElementById('scoreDisplay').innerText = score;
+  document.getElementById('wrongDisplay').innerText = wrongCount;
+  document.getElementById("nextBtn").classList.remove("hidden");
+  
+  setTimeout(() => {
+    document.getElementById("resultContainer").scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'nearest' 
+    });
+  }, 100);
+}
+
+function checkInputAnswers() {
+  const q = questions[currentIndex];
+  const numAnswers = q.answers.length;
+  
+  let userAnswers = [];
+  let correctCount = 0;
+  
+  // รวบรวมคำตอบของผู้ใช้
+  for (let i = 0; i < numAnswers; i++) {
+    const input = document.getElementById(`input_${i}`);
+    const userAnswer = input.value.trim().toLowerCase();
+    const correctAnswer = q.answers[i].toLowerCase();
+    
+    userAnswers.push(input.value.trim());
+    
+    if (userAnswer === correctAnswer) {
+      input.classList.add('correct-input');
+      correctCount++;
+    } else {
+      input.classList.add('wrong-input');
+    }
+    
+    input.disabled = true;
+  }
+  
+  // ปิดปุ่มตรวจคำตอบ
+  document.querySelector('.submit-answer-btn').disabled = true;
+  
+  // คำนวณคะแนน
+  let resultHTML = '';
+  
+  if (correctCount === numAnswers) {
+    score++;
+    resultHTML = `
+      <div class="result-box correct-result">
+        ✅ ถูกทั้งหมด! เก่งมาก (${correctCount}/${numAnswers})
+      </div>
+    `;
+  } else if (correctCount > 0) {
+    resultHTML = `
+      <div class="result-box wrong-result">
+        ⚠️ ถูกบางส่วน (${correctCount}/${numAnswers})
+      </div>
+    `;
+    wrongCount++;
+  } else {
+    wrongCount++;
+    resultHTML = `
+      <div class="result-box wrong-result">
+        ❌ ผิดทั้งหมด (0/${numAnswers})
+      </div>
+    `;
+  }
+  
+  // แสดงคำตอบที่ถูกต้อง
+  resultHTML += `
+    <div class="correct-answers-box">
+      <div class="correct-answers-title">✓ คำตอบที่ถูกต้อง</div>
+      <div class="answer-comparison">
+  `;
+  
+  for (let i = 0; i < numAnswers; i++) {
+    const isCorrect = userAnswers[i].toLowerCase() === q.answers[i].toLowerCase();
+    resultHTML += `
+      <div class="comparison-item">
+        <span><strong>(${i + 21})</strong> คำตอบของคุณ: <span class="${isCorrect ? 'correct-answer' : 'your-answer'}">${userAnswers[i] || '(ไม่ได้ตอบ)'}</span></span>
+        ${!isCorrect ? `<span class="correct-answer">→ ${q.answers[i]}</span>` : ''}
+      </div>
+    `;
+  }
+  
+  resultHTML += `
+      </div>
+    </div>
+  `;
+  
+  // แสดงคำอธิบาย (ถ้ามี)
+  if (q.explanation && q.explanation.trim() !== '') {
+    resultHTML += `
+      <div class="explanation-box">
+        <div class="explanation-title">💡 คำอธิบาย</div>
+        <div class="explanation-text">${q.explanation}</div>
+      </div>
+    `;
+  }
+  
+  document.getElementById("resultContainer").innerHTML = resultHTML;
+  document.getElementById('scoreDisplay').innerText = score;
+  document.getElementById('wrongDisplay').innerText = wrongCount;
+  document.getElementById("nextBtn").classList.remove("hidden");
+  
+  setTimeout(() => {
+    document.getElementById("resultContainer").scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'nearest' 
+    });
+  }, 100);
+}
+
+function updateProgress() {
+  const percent = ((currentIndex) / questions.length) * 100;
+  document.getElementById("progressBar").style.width = percent + "%";
+  document.getElementById("progressText").innerText = Math.round(percent) + "%";
+}
+
+function showResult() {
+  const percentage = Math.round((score / questions.length) * 100);
+  let message = '';
+  let emoji = '';
+
+  if (percentage >= 80) {
+    message = 'ยอดเยี่ยม! 🎉';
+    emoji = '🏆';
+  } else if (percentage >= 60) {
+    message = 'ดีมาก! 👍';
+    emoji = '⭐';
+  } else if (percentage >= 40) {
+    message = 'พอใช้ ลองทำใหม่นะ 💪';
+    emoji = '📚';
+  } else {
+    message = 'ต้องตั้งใจมากกว่านี้นะ 📖';
+    emoji = '💪';
+  }
+
+  document.getElementById('quizContent').innerHTML = `
+    <div class="final-score">
+      <div class="score-circle">
+        <div class="score-number">${score}/${questions.length}</div>
+        <div class="score-label">คะแนน</div>
+      </div>
+      <div class="score-message">${emoji} ${message}</div>
+      <div class="score-percentage">คิดเป็น ${percentage}%</div>
+      <div style="display: flex; gap: 10px; justify-content: center; font-size: 14px; color: #666;">
+        <div>✅ ถูก: <strong>${score}</strong> ข้อ</div>
+        <div>❌ ผิด: <strong>${wrongCount}</strong> ข้อ</div>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById("choices").innerHTML = "";
+  document.getElementById("resultContainer").innerHTML = "";
+  document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("restartBtn").classList.remove("hidden");
+  document.getElementById("progressBar").style.width = "100%";
+  document.getElementById("progressText").innerText = "100%";
+}
+
+function backToSelection() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('sectionSelection').classList.remove('hidden');
+  currentIndex = 0;
+  score = 0;
+  wrongCount = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Event Listeners
+document.getElementById("nextBtn").onclick = () => {
+  currentIndex++;
+  showQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+document.getElementById("restartBtn").onclick = () => {
+  currentIndex = 0;
+  score = 0;
+  wrongCount = 0;
+  document.getElementById("restartBtn").classList.add("hidden");
+  shuffleArray(questions);
+  showQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+document.getElementById("backBtn").onclick = backToSelection;
+
+// Keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !document.getElementById("nextBtn").classList.contains('hidden')) {
+    document.getElementById("nextBtn").click();
+    return;
+  }
+  
+  // กด Enter ในช่อง input สุดท้ายเพื่อตรวจคำตอบ
+  if (e.key === 'Enter' && e.target.classList.contains('answer-input')) {
+    const submitBtn = document.querySelector('.submit-answer-btn');
+    if (submitBtn && !submitBtn.disabled) {
+      submitBtn.click();
+    }
+    return;
+  }
+  
+  const buttons = document.querySelectorAll('.choice-btn:not(:disabled)');
+  if (buttons.length > 0) {
+    const key = e.key.toUpperCase();
+    if (['A', 'B', 'C', 'D'].includes(key)) {
+      const index = key.charCodeAt(0) - 65;
+      if (buttons[index]) {
+        buttons[index].click();
+      }
+    }
+  }
+});
+
+</script>
+
+</body>
+</html>
