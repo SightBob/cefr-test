@@ -822,14 +822,22 @@ fetch(SHEET_CSV_URL)
             questionData.inputMode = true;
           } else {
             // สำหรับ choice mode
-            let answerIndex = parseInt(row.answer) - 1;
-            if (isNaN(answerIndex) && row.answer_word) {
-              const choices = [row.choice1, row.choice2, row.choice3, row.choice4];
-              answerIndex = choices.findIndex(c => c && c.trim() === row.answer_word.trim());
+            const choices = [row.choice1, row.choice2, row.choice3, row.choice4].filter(c => c && c.trim() !== '');
+            questionData.choices = choices;
+            
+            // ค้นหาตำแหน่งคำตอบจาก answer_word
+            if (row.answer_word) {
+              questionData.answerText = row.answer_word.trim();
+              questionData.answer = choices.indexOf(row.answer_word.trim());
+              // ถ้าไม่เจอให้ลองใช้ answer เป็นหมายเลข
+              if (questionData.answer === -1 && row.answer) {
+                questionData.answer = parseInt(row.answer) - 1;
+              }
+            } else {
+              // ถ้าไม่มี answer_word ใช้ answer เป็นหมายเลข
+              questionData.answer = row.answer ? parseInt(row.answer) - 1 : 0;
             }
             
-            questionData.choices = [row.choice1, row.choice2, row.choice3, row.choice4].filter(c => c && c.trim() !== '');
-            questionData.answer = answerIndex;
             questionData.inputMode = false;
           }
           
@@ -995,7 +1003,7 @@ function showChoiceQuestion(q, choicesDiv) {
       <span class="choice-letter">${letters[i]}</span>
       <span class="choice-text">${choiceObj.text}</span>
     `;
-    // Pass the original index to checkAnswer
+    // Pass the original index to checkAnswer (ตำแหน่งเดิมก่อน shuffle)
     btn.onclick = () => checkAnswer(choiceObj.originalIndex, btn);
     choicesDiv.appendChild(btn);
   });
@@ -1048,7 +1056,15 @@ function checkAnswer(selected, btnElement) {
     `;
   } else {
     btnElement.classList.add("wrong");
-    buttons[q.answer].classList.add("correct");
+    // หาปุ่มที่มี originalIndex ตรงกับ q.answer แล้วไฮไลต์
+    const correctBtn = Array.from(buttons).find(btn => {
+      // หาจาก data attribute หรือจากข้อความ
+      const btnText = btn.querySelector('.choice-text').textContent;
+      return btnText === q.choices[q.answer];
+    });
+    if (correctBtn) {
+      correctBtn.classList.add("correct");
+    }
     wrongCount++;
     resultHTML = `
       <div class="result-box wrong-result">
@@ -1285,7 +1301,4 @@ document.addEventListener('keydown', (e) => {
 </script>
 
 </body>
-
 </html>
-
-
